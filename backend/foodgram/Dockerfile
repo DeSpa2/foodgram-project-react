@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY requirements.txt ./
 
-RUN pip3 install -r ./requirements.txt --no-cache-dir --disable-pip-version-check && rm -rf /var/cache/apk/*
+RUN pip install -r ./requirements.txt --no-cache-dir --disable-pip-version-check && rm -rf /var/cache/apk/*
 
 COPY ./ .
 
