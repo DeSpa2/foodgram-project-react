@@ -123,7 +123,8 @@ class RecipeViewSet(ModelViewSet):
             recipe=recipe
         ).delete()
         return Response(status=HTTP_204_NO_CONTENT)
-    
+
+
 class ShoppingCartViewSet(ModelViewSet):
     serializer_class = RecipeSerializer
     permission_classes = (IsAuthenticatedOrAdmin,)
