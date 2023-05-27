@@ -12,6 +12,7 @@ from recipes.models import Basket, IngredientRecipe
 from .permissions import IsAuthenticatedOrAdmin
 from .serializers import RecipeSerializer
 
+
 class ShoppingCartViewSet(ModelViewSet):
     serializer_class = RecipeSerializer
     permission_classes = (IsAuthenticatedOrAdmin,)
