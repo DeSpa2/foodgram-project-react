@@ -14,27 +14,25 @@ class User(AbstractUser):
                    'Только буквы, цифры и @/./+/-/_ '),
         validators=[username_validator],
         error_messages={
-            'unique': "Пользователь с таким логином уже существует.",
+            'unique': "Пользователь с таким логином уже существует."
         },
     )
     first_name = models.CharField(
         'Имя',
         max_length=150,
-        help_text='Укажите имя'
+        help_text='Укажите имя',
+        blank=True
     )
     last_name = models.CharField(
         'Фамилия',
         max_length=150,
         help_text='Укажите фамилию',
-        blank=False,
-        null=False
+        blank=True
     )
     email = models.EmailField(
         'Почта',
         max_length=254,
         help_text='Укажите электронную почту',
-        blank=False,
-        null=False,
         unique=True
     )
 
@@ -69,16 +67,16 @@ class Follow(models.Model):
         verbose_name_plural = 'Подписки'
 
     class Meta:
-        constraints = [
+        constraints = (
             models.CheckConstraint(
                 check=~models.Q(user=models.F('author')),
                 name='Пользователь не может подписаться сам на себя'
             ),
             models.UniqueConstraint(
-                fields=['user', 'author'],
+                fields=('user', 'author'),
                 name='Подписаться на другого пользователя дважды запрещается'
             )
-        ]
+        )
         verbose_name = 'Подписка',
         verbose_name_plural = 'Подписки'
 

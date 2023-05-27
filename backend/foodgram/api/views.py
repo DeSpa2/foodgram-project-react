@@ -1,14 +1,19 @@
+from io import BytesIO
+
 from django.db.models import Sum
 from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import (Basket, Favorites, Ingredient, IngredientRecipe,
-                            Recipe, Tag)
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
                                    HTTP_400_BAD_REQUEST)
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
+from recipes.models import (Basket, Favorites, Ingredient, IngredientRecipe,
+                            Recipe, Tag)
 
 from .filters import RecipeFilter
 from .permissions import AuthorOrAdminOrReadOnly, IsAuthenticatedOrAdmin
@@ -48,32 +53,6 @@ class RecipeViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-
-    @action(detail=False, permission_classes=(IsAuthenticatedOrAdmin,))
-    def download_shopping_cart(self, request):
-        if not Basket.objects.filter(
-                user=request.user
-        ).exists():
-            return Response(
-                {'errors': 'В Корзине отсутствуют рецепты'},
-                status=HTTP_400_BAD_REQUEST
-            )
-        ingredients = IngredientRecipe.objects.filter(
-            recipes__baskets__user=request.user
-        ).values(
-            'ingredient__name',
-            'ingredient__measurement_unit'
-        ).annotate(amount=Sum('amount'))
-        shopping_list = ''
-        for ingredient in ingredients:
-            item = (f'* {ingredient["ingredient__name"]} '
-                    f'({ingredient["ingredient__measurement_unit"]}) -- '
-                    f'{ingredient["amount"]}\n\n'
-                    )
-            shopping_list += item
-        return HttpResponse(shopping_list,
-                            content_type='text/plain;charset=UTF-8'
-                            )
 
     @action(methods=['post', 'delete'],
             detail=True,
@@ -144,3 +123,55 @@ class RecipeViewSet(ModelViewSet):
             recipe=recipe
         ).delete()
         return Response(status=HTTP_204_NO_CONTENT)
+    
+class ShoppingCartViewSet(ModelViewSet):
+    serializer_class = RecipeSerializer
+    permission_classes = (IsAuthenticatedOrAdmin,)
+
+    def create(self, request, *args, **kwargs):
+        recipe_id = self.kwargs.get('recipe_id')
+        request.data['recipe'] = recipe_id
+        return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_object(self):
+        recipe_id = self.kwargs.get('recipe_id')
+        shopping_cart_recipe_obj = Basket.objects.filter(
+            user=self.request.user,
+            recipe=recipe_id)
+        return shopping_cart_recipe_obj
+
+
+@api_view(['GET'])
+def download_shopping_cart(request):
+    user = request.user
+    ingredients = (IngredientRecipe.objects
+                   .filter(recipe__shopping_users=user)
+                   .values('ingredient')
+                   .annotate(sum_amount=Sum('amount'))
+                   .values_list('ingredient__name',
+                                'ingredient__measurement_unit',
+                                'sum_amount'))
+
+    file_buffer = BytesIO()
+    pdf_canvas = canvas.Canvas(file_buffer, pagesize=letter)
+
+    y_coordinate = 750
+
+    for ingredient in ingredients:
+        data_string = '{} {} - {}'.format(*ingredient)
+        pdf_canvas.drawString(100, y_coordinate, data_string)
+        y_coordinate -= 20
+
+    pdf_canvas.save()
+
+    file_buffer.seek(0)
+
+    response = HttpResponse(
+        file_buffer, content_type='application/pdf')
+    response['Content-Disposition'] = (
+        'attachment; filename="ingredients.pdf"')
+
+    return response
