@@ -157,5 +157,6 @@ sudo docker-compose exec backend python manage.py loaddata fixtures.json
 
 Ознакомиться с документацией по проекту можно по адресу: http://51.250.100.110/api/docs/
 
+
 ## Author
 # DeSpa2
