@@ -1,21 +1,21 @@
-version: '3.8'
+version: '3.3'
 services:
   db:
-    image: postgres:13.0-alpine
+    image: postgres:13.4
     volumes:
       - postgres:/var/lib/postgresql/data/
     env_file:
       - ./.env
 
   frontend:
-    image: despa2/foodgram_front:latest
+    image: despa2/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
       - db
 
   backend:
-    image: despa2/foodgram_back:latest
+    image: despa2/foodgram_backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -27,7 +27,7 @@ services:
       - ./.env
 
   nginx:
-    image: nginx:1.21.3-alpine
+    image: nginx:1.19.3
     ports:
       - "80:80"
     volumes:
