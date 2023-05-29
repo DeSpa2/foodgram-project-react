@@ -26,7 +26,7 @@ class Tag(models.Model):
         null=True,
         help_text='Укажите слаг тега'
     )
-    
+
 
     class Meta:
         ordering = ('-id',)
