@@ -27,7 +27,6 @@ class Tag(models.Model):
         help_text='Укажите слаг тега'
     )
 
-
     class Meta:
         ordering = ('-id',)
         verbose_name = 'Тег'
