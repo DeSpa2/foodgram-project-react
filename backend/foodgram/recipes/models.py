@@ -8,18 +8,20 @@ User = get_user_model()
 
 class Tag(models.Model):
     name = models.CharField(
-        'Название',
-        max_length=200
+        verbose_name='Название',
+        max_length=200,
+        db_index=True,
     )
     color = ColorField(default='#008000')
     slug = models.SlugField(
-        'Уникальный слаг',
+        verbose_name='Уникальный слаг',
         max_length=200,
         unique=True,
-        null=True
+        allow_unicode=True,
     )
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
