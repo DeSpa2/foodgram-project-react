@@ -3,6 +3,13 @@
 # FOODGRAM-PROJECT-REACT
 
 Адрес сервера: http://51.250.100.110
+Админка
+Логин: Sinonim1337@bk.ru
+Пароль: Sinonim1337
+
+Тестовый пользователь
+Логин: DenSpas2@yandex.ru
+Пароль: ]ea2Y*udbeW4}Hn
 
 ## О чём проект:
 

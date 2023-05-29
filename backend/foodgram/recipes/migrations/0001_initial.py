@@ -77,7 +77,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200, verbose_name='Название')),
-                ('color', colorfield.fields.ColorField(default='#008000', image_field=None, max_length=18, samples=None)),
+                ('color', colorfield.fields.ColorField(default='#008000', max_length=18, samples=None)),
                 ('slug', models.SlugField(max_length=200, null=True, unique=True, verbose_name='Уникальный слаг')),
             ],
             options={
