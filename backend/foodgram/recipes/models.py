@@ -1,34 +1,27 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
+from colorfield.fields import ColorField
 
 User = get_user_model()
 
 
 class Tag(models.Model):
     name = models.CharField(
-        'Наименование тега',
+        verbose_name='Название',
         max_length=200,
-        unique=True,
-        help_text='Укажите наименование тега'
+        db_index=True,
     )
-    color = models.CharField(
-        'Цвет',
-        max_length=7,
-        null=True,
-        unique=True,
-        help_text='Укажите цвет тега'
-    )
+    color = ColorField(default='#008000')
     slug = models.SlugField(
-        'Слаг',
+        verbose_name='Уникальный слаг',
         max_length=200,
         unique=True,
-        null=True,
-        help_text='Укажите слаг тега'
+        allow_unicode=True,
     )
 
     class Meta:
-        ordering = ('-id',)
+        ordering = ['name']
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
