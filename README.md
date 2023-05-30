@@ -11,7 +11,6 @@
 Логин: DenSpas2@yandex.ru
 Пароль: ]ea2Y*udbeW4}Hn
 
-
 ## О чём проект:
 
 Cайт Foodgram, «Продуктовый помощник». 
