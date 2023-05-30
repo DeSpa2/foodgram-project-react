@@ -7,6 +7,7 @@ User = get_user_model()
 
 class Tag(models.Model):
     name = models.CharField(
+        User,
         'Название',
         max_length=200
     )
