@@ -8,8 +8,8 @@
 Пароль: Sinonim1337
 
 Тестовый пользователь
-Логин: DenSpas2@yandex.ru
-Пароль: ]ea2Y*udbeW4}Hn
+Логин: User1@bk.ru
+Пароль: User1
 
 ## О чём проект:
 
