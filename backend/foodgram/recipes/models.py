@@ -1,32 +1,39 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
-from colorfield.fields import ColorField
 
 User = get_user_model()
 
 
-class Tag(models.Model):
-    name = models.CharField(
-        verbose_name='Название',
-        max_length=200,
-        db_index=True,
-    )
-    color = ColorField(default='#008000')
-    slug = models.SlugField(
-        verbose_name='Уникальный слаг',
-        max_length=200,
-        unique=True,
-        allow_unicode=True,
-    )
-
-    class Meta:
-        ordering = ['name']
-        verbose_name = 'Тег'
-        verbose_name_plural = 'Теги'
-
-    def __str__(self):
-        return self.name
+class Tag(models.Model): 
+    name = models.CharField( 
+        'Название', 
+        max_length=200 
+    ) 
+    color = models.CharField( 
+        'Цвет в HEX', 
+        max_length=7, 
+        null=True, 
+        validators=[ 
+            RegexValidator( 
+                '^#([a-fA-F0-9]{6})', 
+                message='Поле должно содержать HEX-код выбранного цвета.' 
+            ) 
+        ] 
+    ) 
+    slug = models.SlugField( 
+        'Уникальный слаг', 
+        max_length=200, 
+        unique=True, 
+        null=True 
+    ) 
+ 
+    class Meta: 
+        verbose_name = 'Тег' 
+        verbose_name_plural = 'Теги' 
+ 
+    def __str__(self): 
+        return self.name 
 
 
 class Ingredient(models.Model):
