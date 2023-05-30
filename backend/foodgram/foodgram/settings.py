@@ -66,15 +66,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
-    "default": {
-        "ENGINE": os.getenv(
-            "DB_ENGINE", default="django.db.backends.postgresql"
-        ),
-        "NAME": os.getenv("DB_NAME", default="postgres"),
-        "USER": os.getenv("POSTGRES_USER", default="postgres"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", default="postgres"),
-        "HOST": os.getenv("DB_HOST", default="db"),
-        "PORT": os.getenv("DB_PORT", default="5432"),
+    'default': {
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT')
     }
 }
 
@@ -103,73 +101,37 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = "/static/admin/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static/admin")
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.CustomPagination',
 }
 
 DJOSER = {
-    "LOGIN_FIELD": "email",
-    "HIDE_USERS": False,
-    "PERMISSIONS": {
-        "user": ("api.permissions.OwnerOrReadOnly",),
-        "user_list": ("api.permissions.OwnerOrReadOnly",),
+    'HIDE_USERS': False,
+    'LOGIN_FIELD': 'email',
+    'SERIALIZERS': {
+        'user_create': 'users.serializers.CustomUserCreateSerializer',
+        'user': 'users.serializers.CustomUserSerializer',
+        'current_user': 'users.serializers.CustomUserSerializer',
     },
-    "SERIALIZERS": {
-        "user": "api.serializers.UserSerializer",
-        "user_list": "api.serializers.UserSerializer",
-        "current_user": "api.serializers.UserSerializer",
-        "user_create": "api.serializers.UserSerializer",
-    },
+    'PERMISSIONS': {
+        'user': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
+        'user_list': ['rest_framework.permissions.IsAuthenticatedOrReadOnly']
+    }
 }
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "loggers": {
-        "django.db.backends": {
-            "level": "DEBUG" if DEBUG else "ERROR",
-            "handlers": [
-                "console",
-            ],
-        },
-    },
-}
-
-MAX_LEGTH = 100
-MAX_LEN_RECIPES = 1000
-MAX_EMAIL_LENGTH = 255
-MAX_USERNAME_LENGTH = 150
-MAX_PASSWORD_LENGTH = 150
-MIN_COOK_TIME = 1
-MAX_COOK_TIME = 300
-MIN_AMOUNT_INGREDIENTS = 1
-MAX_AMOUNT_INGREDIENTS = 100
-PAGE_SIZE = 8
-RECIPE_IMAGE_SIZE = 500, 300
-ADD_METHODS = "GET", "POST"
-DEL_METHODS = "DELETE"
-ACTION_METHODS = "GET", "POST", "DELETE"
-SYMBOL_TRUE_SEARCH = "1", "true"
-SYMBOL_FALSE_SEARCH = "0", "false"
-EXTRA = 1
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-DATE_TIME_FORMAT = "%d/%m/%Y %H:%M"
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
