@@ -6,7 +6,7 @@ from rest_framework.serializers import (CharField, ImageField, ModelSerializer,
                                         SerializerMethodField, ValidationError)
 from rest_framework.status import HTTP_400_BAD_REQUEST
 
-from recipes.models import (Basket, Favorites, Ingredient, IngredientRecipe,
+from recipes.models import (ShoppingCart, TaggedRecipe, Ingredient, IngredientRecipe,
                             Recipe, Tag)
 from users.serializers import CustomUserSerializer
 
@@ -111,7 +111,7 @@ class RecipeSerializer(ModelSerializer):
         request = self.context.get('request')
         if request.user.is_anonymous:
             return False
-        return Favorites.objects.filter(
+        return TaggedRecipe.objects.filter(
             user=request.user,
             recipe=obj
         ).exists()
@@ -120,7 +120,7 @@ class RecipeSerializer(ModelSerializer):
         request = self.context.get('request')
         if request.user.is_anonymous:
             return False
-        return Basket.objects.filter(
+        return ShoppingCart.objects.filter(
             user=request.user,
             recipe=obj
         ).exists()
