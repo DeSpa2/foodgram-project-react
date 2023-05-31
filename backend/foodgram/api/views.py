@@ -2,8 +2,8 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import (Ingredient, IngredientRecipe, Recipe, Basket,
-                            Tag, Favorites)
+from recipes.models import (Basket, Favorites, Ingredient, IngredientRecipe,
+                            Recipe, Tag)
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
