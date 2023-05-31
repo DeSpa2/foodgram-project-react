@@ -2,8 +2,8 @@ from base64 import b64decode
 
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
-from recipes.models import (Ingredient, IngredientRecipe, Recipe, ShoppingCart,
-                            Tag, TaggedRecipe)
+from recipes.models import (Ingredient, IngredientRecipe, Recipe, Basket,
+                            Tag, Favorites)
 from rest_framework.serializers import (CharField, ImageField, ModelSerializer,
                                         SerializerMethodField, ValidationError)
 from rest_framework.status import HTTP_400_BAD_REQUEST
@@ -110,7 +110,7 @@ class RecipeSerializer(ModelSerializer):
         request = self.context.get('request')
         if request.user.is_anonymous:
             return False
-        return TaggedRecipe.objects.filter(
+        return Favorites.objects.filter(
             user=request.user,
             recipe=obj
         ).exists()
@@ -119,7 +119,7 @@ class RecipeSerializer(ModelSerializer):
         request = self.context.get('request')
         if request.user.is_anonymous:
             return False
-        return ShoppingCart.objects.filter(
+        return Basket.objects.filter(
             user=request.user,
             recipe=obj
         ).exists()
