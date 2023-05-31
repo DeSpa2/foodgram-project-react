@@ -2,7 +2,7 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import (Basket, Favorites, Ingredient, IngredientRecipe,
+from recipes.models import (ShoppingCart, TaggedRecipe, Ingredient, IngredientRecipe,
                             Recipe, Tag)
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -51,7 +51,7 @@ class RecipeViewSet(ModelViewSet):
 
     @action(detail=False, permission_classes=(IsAuthenticatedOrAdmin,))
     def download_shopping_cart(self, request):
-        if not Basket.objects.filter(
+        if not ShoppingCart.objects.filter(
                 user=request.user
         ).exists():
             return Response(
@@ -83,7 +83,7 @@ class RecipeViewSet(ModelViewSet):
         recipe = get_object_or_404(Recipe, id=pk)
         if request.method == 'POST':
             serializer = ShortRecipeSerializer(recipe)
-            if Basket.objects.filter(
+            if ShoppingCart.objects.filter(
                 user=request.user,
                 recipe=recipe
             ).exists():
@@ -91,12 +91,12 @@ class RecipeViewSet(ModelViewSet):
                     {'errors': 'Данный рецепт уже есть в списке покупок'},
                     status=HTTP_400_BAD_REQUEST
                 )
-            Basket.objects.create(
+            ShoppingCart.objects.create(
                 user=request.user,
                 recipe=recipe
             )
             return Response(serializer.data, status=HTTP_201_CREATED)
-        if not Basket.objects.filter(
+        if not ShoppingCart.objects.filter(
             user=request.user,
             recipe=recipe
         ).exists():
@@ -104,7 +104,7 @@ class RecipeViewSet(ModelViewSet):
                 {'errors': 'Данный рецепт в Корзине отсутствует'},
                 status=HTTP_400_BAD_REQUEST
             )
-        Basket.objects.filter(
+        ShoppingCart.objects.filter(
             user=request.user,
             recipe=recipe
         ).delete()
@@ -118,7 +118,7 @@ class RecipeViewSet(ModelViewSet):
         recipe = get_object_or_404(Recipe, id=pk)
         if request.method == 'POST':
             serializer = ShortRecipeSerializer(recipe)
-            if Favorites.objects.filter(
+            if TaggedRecipe.objects.filter(
                 user=request.user,
                 recipe=recipe
             ).exists():
@@ -126,12 +126,12 @@ class RecipeViewSet(ModelViewSet):
                     {'errors': 'Данный рецепт уже добавлен в Избранное'},
                     status=HTTP_400_BAD_REQUEST
                 )
-            Favorites.objects.create(
+            TaggedRecipe.objects.create(
                 user=request.user,
                 recipe=recipe
             )
             return Response(serializer.data, status=HTTP_201_CREATED)
-        if not Favorites.objects.filter(
+        if not TaggedRecipe.objects.filter(
             user=request.user,
             recipe=recipe
         ).exists():
@@ -139,7 +139,7 @@ class RecipeViewSet(ModelViewSet):
                 {'errors': 'Данный рецепт отсутствует в Избранном'},
                 status=HTTP_400_BAD_REQUEST
             )
-        Favorites.objects.filter(
+        TaggedRecipe.objects.filter(
             user=request.user,
             recipe=recipe
         ).delete()
