@@ -2,12 +2,11 @@ from base64 import b64decode
 
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
+from recipes.models import (Ingredient, IngredientRecipe, Recipe, ShoppingCart,
+                            Tag, TaggedRecipe)
 from rest_framework.serializers import (CharField, ImageField, ModelSerializer,
                                         SerializerMethodField, ValidationError)
 from rest_framework.status import HTTP_400_BAD_REQUEST
-
-from recipes.models import (ShoppingCart, TaggedRecipe, Ingredient, IngredientRecipe,
-                            Recipe, Tag)
 from users.serializers import CustomUserSerializer
 
 
