@@ -16,7 +16,7 @@ class Command(BaseCommand):
             for row in reader:
                 name = row[0]
                 measurement_unit = row[1]
-                ingredient, created = Ingredient.objects.get_or_create(name=name, measurement_unit=measurement_unit)
+                ingredient, created = Ingredient.objects.update_or_create(name=name, measurement_unit=measurement_unit)
                 if created:
                     self.stdout.write(
                         self.style.SUCCESS(f'Ингредиент добавлен "{name}" с единицей измерения "{measurement_unit}"')
