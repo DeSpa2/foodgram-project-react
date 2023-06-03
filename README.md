@@ -3,13 +3,14 @@
 # FOODGRAM-PROJECT-REACT
 
 Адрес сервера: http://51.250.100.110
+Redoc: http://51.250.100.110/api/docs/redoc.html
 Админка
-Логин: Sinonim1337@bk.ru
-Пароль: Sinonim1337
+Логин: admin@bk.ru
+Пароль: admin
 
 Тестовый пользователь
-Логин: User1@bk.ru
-Пароль: User1
+Логин: larisa@mail.ru
+Пароль: gkANqs!jR7Q7L.y
 
 
 ## О чём проект:

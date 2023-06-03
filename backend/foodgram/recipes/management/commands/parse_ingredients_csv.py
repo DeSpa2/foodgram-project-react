@@ -16,7 +16,7 @@ class Command(BaseCommand):
             for row in reader:
                 name = row[0]
                 measurement_unit = row[1]
-                if name == 'пекарский порошок' and name == 'стейк семги':
+                if name == 'пекарский порошок' and name == 'стейк семги' and name == 'цитроновые цукаты':
                     continue
                 ingredient, created = Ingredient.objects.get_or_create(name=name, measurement_unit=measurement_unit)
                 if created:
