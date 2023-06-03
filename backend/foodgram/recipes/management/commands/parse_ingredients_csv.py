@@ -16,6 +16,8 @@ class Command(BaseCommand):
             for row in reader:
                 name = row[0]
                 measurement_unit = row[1]
+                if name == 'пекарский порошок':
+                    continue  # пропускаем поле с заданным именем
                 ingredient, created = Ingredient.objects.update_or_create(name=name, measurement_unit=measurement_unit)
                 if created:
                     self.stdout.write(
