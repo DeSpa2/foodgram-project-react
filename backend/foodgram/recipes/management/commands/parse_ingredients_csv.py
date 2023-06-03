@@ -10,15 +10,14 @@ PATH = "foodgram/data"
 class Command(BaseCommand):
     help = "import data from ingredients.csv"
 
-    def handle(self, *args, **kwargs):
-        with open(f"{PATH}/ingredients.csv", encoding="utf-8") as file:
+    def handle(self, *args, **options):
+        with open(f'{PATH}/ingredients.csv', 'r') as file:
             reader = csv.reader(file)
-            next(reader)
-            ingredients_to_add = [
-                Ingredient(
-                    name=row[0],
-                    measurement_unit=row[1],
-                )
-                for row in reader
-            ]
-            Ingredient.objects.bulk_create(ingredients_to_add)
+            for row in reader:
+                name = row[0]
+                # Здесь используется метод get_or_create() для избежания дубликатов
+                ingredient, created = Ingredient.objects.get_or_create(name=name)
+                if created:
+                    self.stdout.write(self.style.SUCCESS(f'Successfully added ingredient "{name}"'))
+                else:
+                    self.stdout.write(self.style.WARNING(f'Ingredient "{name}" already exists'))
