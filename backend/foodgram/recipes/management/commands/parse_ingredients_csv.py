@@ -18,6 +18,11 @@ class Command(BaseCommand):
                 # Здесь используется метод get_or_create() для избежания дубликатов
                 ingredient, created = Ingredient.objects.get_or_create(name=name)
                 if created:
-                    self.stdout.write(self.style.SUCCESS(f'Successfully added ingredient "{name}"'))
+                    self.stdout.write(
+                        self.style.SUCCESS(f'Successfully added ingredient "{name}"')
+                    )
                 else:
-                    self.stdout.write(self.style.WARNING(f'Ingredient "{name}" already exists'))
+                    self.stdout.write(
+                        self.style.WARNING(f'Ingredient "{name}" already exists')
+                    )
+
