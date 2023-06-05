@@ -123,7 +123,7 @@ class FollowSerializer(ModelSerializer):
         user = self.context.get('request').user
         author = validated_data.get('author')
         return Follow.objects.create(user=user, author=author)
-    
+
 
 class MeUserSerializer(UserSerializer):
 

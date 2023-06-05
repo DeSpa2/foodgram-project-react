@@ -5,7 +5,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.pagination import CustumPagination
 from users.serializers import FollowSerializer, MeUserSerializer
 
 from users.models import Follow, User
