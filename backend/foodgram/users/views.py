@@ -49,10 +49,10 @@ class CustomUserViewSet(UserViewSet):
 
     @subscribe.mapping.delete
     def delete_subscribe(self, request, **kwargs):
-        user = get_object_or_404(User, id=self.kwargs.get('id'))
+        author = get_object_or_404(User, id=self.kwargs.get('id'))
         if not Follow.objects.filter(
                 user=request.user,
-                user=user
+                author=author
         ).exists():
             return Response(
                 {'errors': 'Данная подписка не существует'},
@@ -60,6 +60,6 @@ class CustomUserViewSet(UserViewSet):
             )
         Follow.objects.filter(
             user=request.user,
-            user=user
+            author=author
         ).delete()
         return Response(status=HTTP_204_NO_CONTENT)
