@@ -3,7 +3,7 @@ from re import match
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
-                                        ValidationError)
+                                        ValidationError, BooleanField)
 from rest_framework.status import HTTP_400_BAD_REQUEST
 
 import api.serializers
@@ -57,9 +57,10 @@ class CustomUserSerializer(UserSerializer):
 
 
 class FollowSerializer(ModelSerializer):
-    recipes = SerializerMethodField()
-    recipes_count = SerializerMethodField()
-    is_subscribed = SerializerMethodField()
+    recipes = SerializerMethodField(method_name='get_recipes')
+    recipes_count = SerializerMethodField(source='recipes.count',
+                                          read_only=True)
+    is_subscribed = BooleanField(default=True)
 
     class Meta:
         model = User
