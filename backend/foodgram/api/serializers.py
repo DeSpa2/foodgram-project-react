@@ -2,6 +2,7 @@ from base64 import b64decode
 
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
 from recipes.models import (Basket, Favorites, Ingredient, IngredientRecipe,
                             Recipe, Tag)
 from rest_framework.serializers import (CharField, ImageField, ModelSerializer,
@@ -145,10 +146,9 @@ class RecipeSerializer(ModelSerializer):
                 )
             amount = ingredient.get('amount')
             if not str(amount).isdigit() or int(amount) < 1:
-                raise ValidationError(
-                    {'ingredients': ('Количество ингредиента в рецепте'
-                                    ' должно быть числом больше или равно 1')},
-                    code=HTTP_400_BAD_REQUEST
+                return Response(
+                {'errors': 'Данная подписка не существует'},
+                status=HTTP_400_BAD_REQUEST
                 )
             ingredient_list.append(current_ingredient)
         return value
