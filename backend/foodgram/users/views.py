@@ -1,21 +1,20 @@
-from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 
-from .models import Follow
-from .serializers import CustomUserSerializer, FollowSerializer
+from api.pagination import CustumPagination
+from users.serializers import FollowSerializer, MeUserSerializer
 
-User = get_user_model()
+from users.models import Follow, User
 
 
-class CustomUserViewSet(UserViewSet):
+class MeUserViewSet(UserViewSet):
+
     queryset = User.objects.all()
-    serializer_class = CustomUserSerializer
+    serializer_class = MeUserSerializer
 
     @action(detail=False,
             methods=['get'],
@@ -23,16 +22,15 @@ class CustomUserViewSet(UserViewSet):
     def subscriptions(self, request):
         user = request.user
         queryset = User.objects.filter(following__user=user)
-        page = self.paginate_queryset(queryset)
-        serializer = FollowSerializer(page,
+        pages = self.paginate_queryset(queryset)
+        serializer = FollowSerializer(pages,
                                       many=True,
                                       context={'request': request})
         return self.get_paginated_response(serializer.data)
 
-    @action(methods=['post', 'delete'],
-            detail=True,
-            permission_classes=[IsAuthenticated]
-            )
+    @action(detail=True,
+            methods=['post', 'delete'],
+            permission_classes=[IsAuthenticated])
     def subscribe(self, request, id):
         user = request.user
         author = get_object_or_404(User, id=id)
@@ -59,20 +57,3 @@ class CustomUserViewSet(UserViewSet):
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    @subscribe.mapping.delete
-    def delete_subscribe(self, request, **kwargs):
-        author = get_object_or_404(User, id=self.kwargs.get('id'))
-        if not Follow.objects.filter(
-                user=request.user,
-                author=author
-        ).exists():
-            return Response(
-                {'errors': 'Данная подписка не существует'},
-                status=HTTP_400_BAD_REQUEST
-            )
-        Follow.objects.filter(
-            user=request.user,
-            author=author
-        ).delete()
-        return Response(status=HTTP_204_NO_CONTENT)
