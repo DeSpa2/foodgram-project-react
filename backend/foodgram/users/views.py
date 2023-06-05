@@ -1,13 +1,11 @@
+from api.permissions import IsAuthenticatedOrAdmin
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.status import (HTTP_204_NO_CONTENT,
-                                   HTTP_400_BAD_REQUEST)
-
-from api.permissions import IsAuthenticatedOrAdmin
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 
 from .models import Follow
 from .serializers import CustomUserSerializer, FollowSerializer
