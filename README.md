@@ -12,7 +12,6 @@ Redoc: http://51.250.100.110/api/docs/redoc.html
 Логин: larisa@mail.ru
 Пароль: gkANqs!jR7Q7L.y
 
-
 ## О чём проект:
 
 Cайт Foodgram, «Продуктовый помощник». 
