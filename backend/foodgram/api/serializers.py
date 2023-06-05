@@ -128,7 +128,7 @@ class RecipeSerializer(ModelSerializer):
         if len(value) == 0:
             raise ValidationError(
                 {'ingredients': ('В рецепте должен быть использован'
-                                 ' минимум один ингредиент')},
+                                ' минимум один ингредиент')},
                 code=HTTP_400_BAD_REQUEST
             )
         ingredient_list = []
@@ -140,13 +140,14 @@ class RecipeSerializer(ModelSerializer):
             if current_ingredient in ingredient_list:
                 raise ValidationError(
                     {'ingredients': ('Ингредиенты не должны'
-                                     ' повторяться в рецепте')},
+                                    ' повторяться в рецепте')},
                     code=HTTP_400_BAD_REQUEST
                 )
-            if int(ingredient.get('amount')) < 1:
+            amount = ingredient.get('amount')
+            if not str(amount).isdigit() or int(amount) < 1:
                 raise ValidationError(
                     {'ingredients': ('Количество ингредиента в рецепте'
-                                     ' должно быть больше или равно 1')},
+                                    ' должно быть числом больше или равно 1')},
                     code=HTTP_400_BAD_REQUEST
                 )
             ingredient_list.append(current_ingredient)
