@@ -123,19 +123,3 @@ class FollowSerializer(ModelSerializer):
         user = self.context.get('request').user
         author = validated_data.get('author')
         return Follow.objects.create(user=user, author=author)
-
-
-class MeUserSerializer(UserSerializer):
-
-    is_subscribed = SerializerMethodField(read_only=True)
-
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'username', 'first_name',
-                  'last_name', 'is_subscribed')
-
-    def get_is_subscribed(self, obj):
-        user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-        return Follow.objects.filter(user=user, author=obj).exists()
