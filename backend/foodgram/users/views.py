@@ -20,7 +20,7 @@ class CustomUserViewSet(UserViewSet):
 
     @action(detail=False, permission_classes=(IsAuthenticatedOrAdmin,))
     def subscriptions(self, request):
-        follows = User.objects.filter(following__user=request.user)
+        follows = User.objects.filter(following__author=request.author)
         pages = self.paginate_queryset(follows)
         serializer = FollowSerializer(
             pages,
@@ -34,15 +34,15 @@ class CustomUserViewSet(UserViewSet):
             permission_classes=(IsAuthenticatedOrAdmin,)
             )
     def subscribe(self, request, **kwargs):
-        user = get_object_or_404(User, id=self.kwargs.get('id'))
+        author = get_object_or_404(User, id=self.kwargs.get('id'))
         serializer = FollowSerializer(
-            user,
+            author,
             data=request.data,
             context={'request': request}
         )
         if not serializer.is_valid():
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-        data = {'user': user}
+        data = {'author': author}
         serializer.create(data)
         serializer.save()
         return Response(serializer.data, status=HTTP_201_CREATED)
