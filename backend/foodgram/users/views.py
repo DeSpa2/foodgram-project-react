@@ -20,7 +20,7 @@ class CustomUserViewSet(UserViewSet):
 
     @action(detail=False, permission_classes=(IsAuthenticatedOrAdmin,))
     def subscriptions(self, request):
-        follows = Follow.objects.filter(following=self.get_object())
+        follows = User.objects.filter(following__user=request.user)
         pages = self.paginate_queryset(follows)
         serializer = FollowSerializer(
             pages,
