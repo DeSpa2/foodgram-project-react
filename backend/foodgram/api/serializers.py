@@ -153,7 +153,6 @@ class RecipeSerializer(ModelSerializer):
             ingredient_list.append(current_ingredient)
         return value
 
-
     def validate_tags(self, value):
         tags_set = set(value)
         if len(tags_set) != len(value):
