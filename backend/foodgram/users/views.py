@@ -1,9 +1,9 @@
-from api.permissions import IsAuthenticatedOrAdmin
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 
@@ -19,7 +19,7 @@ class CustomUserViewSet(UserViewSet):
 
     @action(detail=False,
             methods=['get'],
-            permission_classes=(IsAuthenticatedOrAdmin,))
+            permission_classes=[IsAuthenticated])
     def subscriptions(self, request):
         user = request.user
         queryset = User.objects.filter(following__user=user)
@@ -31,7 +31,7 @@ class CustomUserViewSet(UserViewSet):
 
     @action(methods=['post', 'delete'],
             detail=True,
-            permission_classes=(IsAuthenticatedOrAdmin,)
+            permission_classes=[IsAuthenticated]
             )
     def subscribe(self, request, id):
         user = request.user
