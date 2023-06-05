@@ -147,8 +147,9 @@ class RecipeSerializer(ModelSerializer):
             amount = ingredient.get('amount')
             if not str(amount).isdigit() or int(amount) < 1:
                 return Response(
-                {'errors': 'Данная подписка не существует'},
-                status=HTTP_400_BAD_REQUEST
+                    {'errors': ('Количество ингредиента в рецепте' 
+                                ' должно быть больше или равно 1')},
+                    status=HTTP_400_BAD_REQUEST
                 )
             ingredient_list.append(current_ingredient)
         return value
