@@ -34,25 +34,25 @@ class CustomUserViewSet(UserViewSet):
             permission_classes=(IsAuthenticatedOrAdmin,)
             )
     def subscribe(self, request, **kwargs):
-        author = get_object_or_404(User, id=self.kwargs.get('id'))
+        user = get_object_or_404(User, id=self.kwargs.get('id'))
         serializer = FollowSerializer(
-            author,
+            user,
             data=request.data,
             context={'request': request}
         )
         if not serializer.is_valid():
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-        data = {'author': author}
+        data = {'user': user}
         serializer.create(data)
         serializer.save()
         return Response(serializer.data, status=HTTP_201_CREATED)
 
     @subscribe.mapping.delete
     def delete_subscribe(self, request, **kwargs):
-        author = get_object_or_404(User, id=self.kwargs.get('id'))
+        user = get_object_or_404(User, id=self.kwargs.get('id'))
         if not Follow.objects.filter(
                 user=request.user,
-                author=author
+                user=user
         ).exists():
             return Response(
                 {'errors': 'Данная подписка не существует'},
@@ -60,6 +60,6 @@ class CustomUserViewSet(UserViewSet):
             )
         Follow.objects.filter(
             user=request.user,
-            author=author
+            user=user
         ).delete()
         return Response(status=HTTP_204_NO_CONTENT)
