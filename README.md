@@ -2,16 +2,6 @@
 
 # FOODGRAM-PROJECT-REACT
 
-Адрес сервера: http://51.250.100.110
-Redoc: http://51.250.100.110/api/docs/redoc.html
-Админка
-Логин: admin@bk.ru
-Пароль: admin
-
-Тестовый пользователь
-Логин: larisa@mail.ru
-Пароль: gkANqs!jR7Q7L.y
-
 ## О чём проект:
 
 Cайт Foodgram, «Продуктовый помощник». 
